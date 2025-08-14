@@ -1,36 +1,83 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class CodeGenerator : MonoBehaviour
 {
-    [field: SerializeField]
+    private int seedEntry;
     public int SeedEntry
-    { get; private set; }
+    {
+        get { return seedEntry; }
+        set
+        {
+            seedEntry = value;
+        }
+    }
 
-    [field: SerializeField]
+    private string textEntry;
     public string TextEntry
-    { get; private set; }
+    {
+        get { return textEntry; }
+        set
+        {
+            textEntry = value;
+        }
+    }
 
+    private string textOutput;
     public string TextOutput
-    { get; private set; }
+    {
+        get { return textOutput; }
+        set
+        {
+            textOutput = value;
+        }
+    }
 
-    [field: SerializeField, Min(10)]
+    private int codeLength;
     public int CodeLength
-    { get; private set; }
+    {
+        get { return codeLength; }
+        set
+        {
+            codeLength = value;
+        }
+    }
 
-    [field: SerializeField, Min(1)]
+    private int capitalsRequired;
     public int CapitalsRequired
-    { get; private set; }
+    {
+        get { return capitalsRequired; }
+        set
+        {
+            capitalsRequired = value;
+        }
+    }
 
-    [field: SerializeField, Min(1)]
+    private int numbersRequired;
     public int NumbersRequired
-    { get; private set; }
+    {
+        get { return numbersRequired; }
+        set
+        {
+            numbersRequired = value;
+        }
+    }
 
-    [field: SerializeField, Min(1)]
+    private int symbolsRequired;
     public int SymbolsRequired
-    { get; private set; }
+    {
+        get { return symbolsRequired; }
+        set
+        {
+            symbolsRequired = value;
+        }
+    }
+
+    public UI_InputAndDisplay InputAndOutputDisplay
+    { get; set; }
+
+    public event Action<string> DisplayCodeOutput;
 
     public static char[] AllowedCharactersAll = new char[]
     {
@@ -72,6 +119,27 @@ public class CodeGenerator : MonoBehaviour
     ',','.','<','>','?'
     };
 
+    private void Awake()
+    {
+        GrabObjectReferences();
+    }
+
+    private void OnEnable()
+    {
+        if (InputAndOutputDisplay != null)
+        {
+            InputAndOutputDisplay.GenerateButtonPress += GeneratePassword;
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (InputAndOutputDisplay != null)
+        {
+            InputAndOutputDisplay.GenerateButtonPress -= GeneratePassword;
+        }
+    }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -81,19 +149,33 @@ public class CodeGenerator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            TextOutput = GenerateValidPass(SeedEntry, TextEntry, CodeLength, CapitalsRequired, NumbersRequired, SymbolsRequired);
 
-            Debug.Log($"TextEntry: {TextEntry} to Output: {TextOutput}");
+    }
+
+    public void GeneratePassword()
+    {
+        TextOutput = GenerateValidPass(SeedEntry, TextEntry, CodeLength, CapitalsRequired, NumbersRequired, SymbolsRequired);
+
+        if (!String.IsNullOrWhiteSpace(TextOutput))
+        {
+            DisplayCodeOutput?.Invoke(TextOutput);
         }
+        else
+        {
+            DisplayError();
+        }
+    }
+
+    public void DisplayError()
+    {
+        Debug.Log($"No valid text generated");
     }
 
     public string GenerateValidPass(int seed, string textEntry, int codeLength, int capitalsRequired, int numbersRequired, int symbolsRequired)
     {
         if (codeLength < capitalsRequired + numbersRequired + symbolsRequired)
         {
-            Debug.LogError("Error - passcode not long enough to be complient with requirements"); ;
+            Debug.LogError("Error - passcode not long enough to be complient with requirements");
             return "Error - passcode not long enough to be complient with requirements.";
         }
 
@@ -187,5 +269,26 @@ public class CodeGenerator : MonoBehaviour
                 generatedText[chosenIndexFromGeneratedText] = symbolsAllowed[seededRandomGenerator.Next(0, symbolsAllowed.Length)];
             }
         }
+    }
+
+    public void GrabObjectReferences()
+    {
+        if (InputAndOutputDisplay == null)
+        {
+            UI_InputAndDisplay uiDisplayScript = GameObject.FindAnyObjectByType<UI_InputAndDisplay>();
+            if (uiDisplayScript != null)
+            {
+                InputAndOutputDisplay = uiDisplayScript;
+            }
+            else
+            {
+                Debug.LogError("Unable to locate Code Generator Script in scene.");
+            }
+        }
+    }
+
+    public void UpdateValue<T>(T inbound, ref T toUpdate)
+    {
+        toUpdate = inbound;
     }
 }

@@ -48,14 +48,6 @@ public class UI_InputManager : MonoBehaviour
 
     void OnClick(InputAction.CallbackContext context)
     {
-        if (context.ReadValueAsButton())
-        {
-            Debug.Log("Click");
-        }
-        else
-        {
-            Debug.Log("Un-Click");
 
-        }
     }
 }
