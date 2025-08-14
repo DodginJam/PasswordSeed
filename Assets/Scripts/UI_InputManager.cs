@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class UI_InputManager : MonoBehaviour
 {
@@ -10,6 +12,8 @@ public class UI_InputManager : MonoBehaviour
         UI_InputActions = InputManager.Instance.InputSystemActions.UI;
 
         SetUpInputListeners(UI_InputActions);
+
+        Debug.Log("Actions assigend and listeners init");
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -24,8 +28,34 @@ public class UI_InputManager : MonoBehaviour
         
     }
 
+    private void OnEnable()
+    {
+        UI_InputActions.Enable();
+    }
+
+    private void OnDisable()
+    {
+        UI_InputActions.Disable();
+    }
+
     public void SetUpInputListeners(InputSystem_Actions.UIActions uiActions)
     {
-        
+        uiActions.Click.performed += context =>
+        {
+            OnClick(context);
+        };
+    }
+
+    void OnClick(InputAction.CallbackContext context)
+    {
+        if (context.ReadValueAsButton())
+        {
+            Debug.Log("Click");
+        }
+        else
+        {
+            Debug.Log("Un-Click");
+
+        }
     }
 }

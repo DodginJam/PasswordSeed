@@ -2136,7 +2136,7 @@ MonoBehaviour:
   <CapitalsInput>k__BackingField: {fileID: 494540380859933946}
   <NumbersInput>k__BackingField: {fileID: 6712969794828286022}
   <SymbolsInput>k__BackingField: {fileID: 5619060262923752640}
-  <SumbitButton>k__BackingField: {fileID: 0}
+  <SumbitButton>k__BackingField: {fileID: 2706340591354966106}
 --- !u!1 &4814071803512360342
 GameObject:
   m_ObjectHideFlags: 0
@@ -2981,6 +2981,7 @@ GameObject:
   - component: {fileID: 5790575134782031761}
   - component: {fileID: 6320953476865004897}
   - component: {fileID: 3794893700213504701}
+  - component: {fileID: 7666123850866321834}
   m_Layer: 5
   m_Name: UI
   m_TagString: Untagged
@@ -3071,6 +3072,18 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &7666123850866321834
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6466340933335065880}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c1d528dfdcef7240b8e8e2aeb4ca56e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6620025938209401942
 GameObject:
   m_ObjectHideFlags: 0

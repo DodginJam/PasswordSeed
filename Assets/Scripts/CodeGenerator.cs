@@ -89,37 +89,6 @@ public class CodeGenerator : MonoBehaviour
         }
     }
 
-    public string GenerateRandomText(int seed, string textEntry, int codeLength)
-    {
-        char[] generatedText = new char[codeLength];
-
-        System.Random seededRandomGenerator = new System.Random(seed);
-
-        int textIndex = 0;
-
-        for (int codeIndex = 0; codeIndex < codeLength; codeIndex++)
-        {
-            int indexOfTextCharacterInAllowed = Array.IndexOf(AllowedCharactersAll, textEntry[textIndex]);
-            System.Random seededRandomForIndex = new System.Random(seed + seed.ToString().Length + seededRandomGenerator.Next() + indexOfTextCharacterInAllowed + codeIndex + codeLength + textEntry.Length);
-
-            int newIndex = seededRandomForIndex.Next(0, AllowedCharactersAll.Length);
-            char newChar = AllowedCharactersAll[newIndex];
-
-            generatedText[codeIndex] = newChar;
-
-            if (textIndex < textEntry.Length - 1)
-            {
-                textIndex++;
-            }
-            else
-            {
-                textIndex = 0;
-            }
-        }
-
-        return new string(generatedText);
-    }
-
     public string GenerateValidPass(int seed, string textEntry, int codeLength, int capitalsRequired, int numbersRequired, int symbolsRequired)
     {
         if (codeLength < capitalsRequired + numbersRequired + symbolsRequired)
