@@ -171,12 +171,22 @@ public class CodeGenerator : MonoBehaviour
         Debug.Log($"No valid text generated");
     }
 
+    /// <summary>
+    /// Generated a valid passcode based on the 
+    /// </summary>
+    /// <param name="seed"></param>
+    /// <param name="textEntry"></param>
+    /// <param name="codeLength"></param>
+    /// <param name="capitalsRequired"></param>
+    /// <param name="numbersRequired"></param>
+    /// <param name="symbolsRequired"></param>
+    /// <returns></returns>
     public string GenerateValidPass(int seed, string textEntry, int codeLength, int capitalsRequired, int numbersRequired, int symbolsRequired)
     {
         if (codeLength < capitalsRequired + numbersRequired + symbolsRequired)
         {
-            Debug.LogError("Error - passcode not long enough to be complient with requirements");
-            return "Error - passcode not long enough to be complient with requirements.";
+            Debug.LogError("Error - passcode length not long enough to comply with requirements.");
+            return "Error - passcode length not long enough to comply with requirements.";
         }
 
         char[] generatedText = new char[codeLength];
@@ -214,6 +224,13 @@ public class CodeGenerator : MonoBehaviour
         return new string(generatedText);
     }
 
+    /// <summary>
+    /// Ensure that the capital letters are used within the code where required.
+    /// </summary>
+    /// <param name="generatedText"></param>
+    /// <param name="capitalsRequired"></param>
+    /// <param name="seededRandomGenerator"></param>
+    /// <param name="indexesAllowForChange"></param>
     public void ApplyCapitals(char[] generatedText, int capitalsRequired, System.Random seededRandomGenerator, out List<int> indexesAllowForChange)
     {
         // Keep track of the avilable to be modified indexes of the generated text to keep track what can be changed.
@@ -239,6 +256,13 @@ public class CodeGenerator : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Ensure that the numbers are added to the generated code.
+    /// </summary>
+    /// <param name="generatedText"></param>
+    /// <param name="numbersRequired"></param>
+    /// <param name="seededRandomGenerator"></param>
+    /// <param name="indexesAllowForChange"></param>
     public void ApplyNumbers(char[] generatedText, int numbersRequired, System.Random seededRandomGenerator, List<int> indexesAllowForChange)
     {
         if (numbersRequired > 0)
@@ -255,6 +279,14 @@ public class CodeGenerator : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Ensure that the symbols are added to the generated passcode.
+    /// </summary>
+    /// <param name="generatedText"></param>
+    /// <param name="symbolsRequired"></param>
+    /// <param name="seededRandomGenerator"></param>
+    /// <param name="indexesAllowForChange"></param>
+    /// <param name="symbolsAllowed"></param>
     public void ApplySymbols(char[] generatedText, int symbolsRequired, System.Random seededRandomGenerator, List<int> indexesAllowForChange, char[] symbolsAllowed)
     {
         if (symbolsRequired > 0)
@@ -271,6 +303,9 @@ public class CodeGenerator : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Find the scripts or components on the scene as required by this.
+    /// </summary>
     public void GrabObjectReferences()
     {
         if (InputAndOutputDisplay == null)
@@ -287,6 +322,12 @@ public class CodeGenerator : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Using a reference type for what would be normally be a value type, update this value to the inbound value.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="inbound"></param>
+    /// <param name="toUpdate"></param>
     public void UpdateValue<T>(T inbound, ref T toUpdate)
     {
         toUpdate = inbound;

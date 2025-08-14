@@ -5,34 +5,58 @@ using System;
 
 public class UI_InputAndDisplay : MonoBehaviour
 {
+    /// <summary>
+    /// The seed for the random number generator to control the randomness.
+    /// </summary>
     [field: SerializeField]
     public TMP_InputField SeedInput
     {  get; private set; }
 
+    /// <summary>
+    /// The text to be used for the base of being randomised input display text field.
+    /// </summary>
     [field: SerializeField]
     public TMP_InputField TextInput
     { get; private set; }
 
+    /// <summary>
+    /// The output of the randomised generated passcode input display text field.
+    /// </summary>
     [field: SerializeField]
     public TextMeshProUGUI TextOutput
     { get; private set; }
 
+    /// <summary>
+    /// The number of capitals required in the generated text input display text field.
+    /// </summary>
     [field: SerializeField]
     public TMP_InputField CapitalsInput
     { get; private set; }
 
+    /// <summary>
+    /// The number of numbers required in the generated input display text field.
+    /// </summary>
     [field: SerializeField]
     public TMP_InputField NumbersInput
     { get; private set; }
 
+    /// <summary>
+    /// The number of symbols required in the generated text input display text field.
+    /// </summary>
     [field: SerializeField]
     public TMP_InputField SymbolsInput
     { get; private set; }
 
+    /// <summary>
+    /// The required length of the generated passcode display text field.
+    /// </summary>
     [field: SerializeField]
     public TMP_InputField LengthInput
     { get; private set; }
 
+    /// <summary>
+    /// The button for generating the passcode.
+    /// </summary>
     [field: SerializeField]
     public Button SumbitButton
     { get; private set; }
@@ -77,6 +101,9 @@ public class UI_InputAndDisplay : MonoBehaviour
         
     }
 
+    /// <summary>
+    /// Set up the listeners for the display elements.
+    /// </summary>
     public void SetUpUIListeners()
     {
         SumbitButton.onClick.AddListener(() => GenerateButtonPress?.Invoke());
@@ -158,6 +185,9 @@ public class UI_InputAndDisplay : MonoBehaviour
         });
     }
 
+    /// <summary>
+    /// Find reference to other components and script in the scene required for the this.
+    /// </summary>
     public void GrabObjectReferences()
     {
         if (CodeGeneratorScript == null)
@@ -174,6 +204,12 @@ public class UI_InputAndDisplay : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Validate whether a string can be processed into an integer.
+    /// </summary>
+    /// <param name="entryText"></param>
+    /// <param name="result"></param>
+    /// <returns></returns>
     public bool ValidateStringToInt(string entryText, out int result)
     {
         if (int.TryParse(entryText, out result))
@@ -186,6 +222,10 @@ public class UI_InputAndDisplay : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Update the displau for the generated code.
+    /// </summary>
+    /// <param name="display"></param>
     public void UpdateCodeDisplay(string display)
     {
         TextOutput.text = display;
