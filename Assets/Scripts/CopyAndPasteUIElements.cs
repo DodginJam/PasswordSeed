@@ -5,6 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using static System.Net.Mime.MediaTypeNames;
 
 public class CopyAndPasteUIElements : MonoBehaviour
 {
@@ -86,6 +87,10 @@ public class CopyAndPasteUIElements : MonoBehaviour
                 if (result.gameObject.TryGetComponent<TextMeshProUGUI>(out TextMeshProUGUI textDisplay))
                 {
                     ClipBoard = textDisplay.text;
+
+#if UNITY_WEBGL
+                    WebGLCopyAndPaste.WebGLCopyAndPasteAPI.CopyToClipboard(textDisplay.text);
+#endif
                     Debug.Log(textDisplay.text);
                     break;
                 }
