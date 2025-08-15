@@ -66,7 +66,7 @@ public class UI_InputAndDisplay : MonoBehaviour
     /// The button for generating the passcode.
     /// </summary>
     [field: SerializeField]
-    public Button SumbitButton
+    public Button SubmitButton
     { get; private set; }
 
     public CodeGenerator CodeGeneratorScript
@@ -120,7 +120,7 @@ public class UI_InputAndDisplay : MonoBehaviour
     /// </summary>
     public void SetUpUIListeners()
     {
-        SumbitButton.onClick.AddListener(() => GenerateButtonPress?.Invoke());
+        SubmitButton.onClick.AddListener(() => GenerateButtonPress?.Invoke());
 
         SeedInput.onEndEdit.AddListener((value) => {
             int variableTemp = CodeGeneratorScript.SeedEntry;
