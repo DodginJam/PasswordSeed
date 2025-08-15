@@ -7,6 +7,11 @@ public class UI_InputManager : MonoBehaviour
     public InputSystem_Actions.UIActions UI_InputActions
     { get; private set; }
 
+    public Vector2 MousePosition
+    { get; private set; }
+
+    public event Action OnClickInput;
+
     private void Awake()
     {
         UI_InputActions = InputManager.Instance.InputSystemActions.UI;
@@ -19,13 +24,13 @@ public class UI_InputManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        MousePosition = UI_InputActions.Point.ReadValue<Vector2>();
     }
 
     private void OnEnable()
@@ -48,6 +53,9 @@ public class UI_InputManager : MonoBehaviour
 
     void OnClick(InputAction.CallbackContext context)
     {
-
+        if (context.ReadValueAsButton())
+        {
+            OnClickInput?.Invoke();
+        }
     }
 }

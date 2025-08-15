@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using System;
+using System.Collections;
 
 public class UI_InputAndDisplay : MonoBehaviour
 {
@@ -54,6 +55,13 @@ public class UI_InputAndDisplay : MonoBehaviour
     public TMP_InputField LengthInput
     { get; private set; }
 
+    [field: SerializeField]
+    public TMP_InputField TimeToClearPassCodeInput
+    { get; private set; }
+
+    public float TimeToClearPassCode
+    { get; private set; } = 2.0f;
+
     /// <summary>
     /// The button for generating the passcode.
     /// </summary>
@@ -65,6 +73,9 @@ public class UI_InputAndDisplay : MonoBehaviour
     { get; private set; }
 
     public event Action GenerateButtonPress;
+
+    public Coroutine ClearPassCodeRoutine
+    { get; private set; }
 
     private void Awake()
     {
@@ -92,7 +103,10 @@ public class UI_InputAndDisplay : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        if (TimeToClearPassCodeInput != null)
+        {
+            TimeToClearPassCodeInput.text = TimeToClearPassCode.ToString();
+        }
     }
 
     // Update is called once per frame
@@ -110,7 +124,7 @@ public class UI_InputAndDisplay : MonoBehaviour
 
         SeedInput.onEndEdit.AddListener((value) => {
             int variableTemp = CodeGeneratorScript.SeedEntry;
-            if (ValidateStringToInt(value, out int parsedInt))
+            if (ValidateStringToNumber(value, out int parsedInt))
             {
                 CodeGeneratorScript.UpdateValue<int>(parsedInt, ref variableTemp);
                 CodeGeneratorScript.SeedEntry = variableTemp;
@@ -130,7 +144,7 @@ public class UI_InputAndDisplay : MonoBehaviour
 
         CapitalsInput.onEndEdit.AddListener((value) => {
             int variableTemp = CodeGeneratorScript.CapitalsRequired;
-            if (ValidateStringToInt(value, out int parsedInt))
+            if (ValidateStringToNumber(value, out int parsedInt))
             {
                 CodeGeneratorScript.UpdateValue<int>(parsedInt, ref variableTemp);
                 CodeGeneratorScript.CapitalsRequired = variableTemp;
@@ -144,21 +158,21 @@ public class UI_InputAndDisplay : MonoBehaviour
 
         NumbersInput.onEndEdit.AddListener((value) => {
             int variableTemp = CodeGeneratorScript.NumbersRequired;
-            if (ValidateStringToInt(value, out int parsedInt))
+            if (ValidateStringToNumber(value, out int parsedInt))
             {
                 CodeGeneratorScript.UpdateValue<int>(parsedInt, ref variableTemp);
                 CodeGeneratorScript.NumbersRequired = variableTemp;
             }
             else
             {
-                Debug.LogError("Unable to convert text string to an int");
+                Debug.LogError("Unable to convert text string to an string");
                 NumbersInput.text = string.Empty;
             }
         });
 
         SymbolsInput.onEndEdit.AddListener((value) => {
             int variableTemp = CodeGeneratorScript.SymbolsRequired;
-            if (ValidateStringToInt(value, out int parsedInt))
+            if (ValidateStringToNumber(value, out int parsedInt))
             {
                 CodeGeneratorScript.UpdateValue<int>(parsedInt, ref variableTemp);
                 CodeGeneratorScript.SymbolsRequired = variableTemp;
@@ -172,7 +186,7 @@ public class UI_InputAndDisplay : MonoBehaviour
 
         LengthInput.onEndEdit.AddListener((value) => {
             int variableTemp = CodeGeneratorScript.CodeLength;
-            if (ValidateStringToInt(value, out int parsedInt))
+            if (ValidateStringToNumber(value, out int parsedInt))
             {
                 CodeGeneratorScript.UpdateValue<int>(parsedInt, ref variableTemp);
                 CodeGeneratorScript.CodeLength = variableTemp;
@@ -180,6 +194,20 @@ public class UI_InputAndDisplay : MonoBehaviour
             else
             {
                 Debug.LogError("Unable to convert text string to an int");
+                SymbolsInput.text = string.Empty;
+            }
+        });
+
+        TimeToClearPassCodeInput.onEndEdit.AddListener((value) => {
+            float variableTemp = TimeToClearPassCode;
+            if (ValidateStringToNumber(value, out float parsedInt))
+            {
+                CodeGeneratorScript.UpdateValue<float>(parsedInt, ref variableTemp);
+                TimeToClearPassCode = variableTemp;
+            }
+            else
+            {
+                Debug.LogError("Unable to convert text string to an float");
                 SymbolsInput.text = string.Empty;
             }
         });
@@ -210,9 +238,21 @@ public class UI_InputAndDisplay : MonoBehaviour
     /// <param name="entryText"></param>
     /// <param name="result"></param>
     /// <returns></returns>
-    public bool ValidateStringToInt(string entryText, out int result)
+    public bool ValidateStringToNumber(string entryText, out int result)
     {
         if (int.TryParse(entryText, out result))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public bool ValidateStringToNumber(string entryText, out float result)
+    {
+        if (float.TryParse(entryText, out result))
         {
             return true;
         }
@@ -229,5 +269,22 @@ public class UI_InputAndDisplay : MonoBehaviour
     public void UpdateCodeDisplay(string display)
     {
         TextOutput.text = display;
+
+        // If a coroutine is currently running, stop it and clear reference to it.
+        if (ClearPassCodeRoutine != null)
+        {
+            StopCoroutine(ClearPassCodeRoutine);
+            ClearPassCodeRoutine = null;
+        }
+
+        // Run the fresh coroutine for the current output of text to be cleared.
+        ClearPassCodeRoutine = StartCoroutine(ClearPasscode(TimeToClearPassCode));
+    }
+
+    public IEnumerator ClearPasscode(float timeUntilClear)
+    {
+        yield return new WaitForSeconds(timeUntilClear);
+
+        TextOutput.text = string.Empty;
     }
 }
